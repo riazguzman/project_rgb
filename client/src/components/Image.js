@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 const Image = () => {
   const [initial, setInitial] = useState(true);
   const [colours, setColours] = useState([]);
-  const [randomSet, setRandomSet] = useState([]);
+  const [image, setImage] = useState([]);
 
   const getColours = () => {
     const colourArray = [];
@@ -30,10 +30,34 @@ const Image = () => {
       if (uniqueArray.indexOf(rand) === -1) {
         uniqueArray.push(rand);
         randomSetArray.push(coloursArray[rand]);
-        console.log(coloursArray[rand]);
       }
     }
-    setRandomSet(randomSetArray);
+    return randomSetArray;
+  };
+
+  const getClosestColour = (center, randomSet) => {
+    let min = 763;
+    let minIndex = 0;
+    let coloursArray = [...colours];
+    randomSet.forEach((element, i) => {
+      const diff =
+        Math.abs(center.r - element.r) +
+        Math.abs(center.g - element.g) +
+        Math.abs(center.b - element.b);
+      if (diff < min) {
+        min = diff;
+        minIndex = i;
+      }
+    });
+    return minIndex;
+  };
+
+  const createImageArray = () => {
+    let coloursArray = [...colours];
+    let randomSetArray = [];
+    while (coloursArray.length != 0) {
+      randomSetArray = getRandomSet();
+    }
   };
 
   useEffect(() => {
@@ -49,19 +73,9 @@ const Image = () => {
     }
   }, [colours]);
 
-  useEffect(() => {
-    randomSet.forEach((element) => {
-      console.log(element.r, element.g, element.b);
-    });
-  }, [randomSet]);
-
-  useEffect(() => {
-    console.log("here");
-  }, [getRandomSet]);
-
   return (
     <div>
-      {randomSet.map((element) => (
+      {image.map((element) => (
         <div>
           <div>{element.r}</div>
           <div>{element.g}</div>
