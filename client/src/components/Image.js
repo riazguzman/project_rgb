@@ -7,9 +7,9 @@ const Image = () => {
 
   const getColours = () => {
     const colourArray = [];
-    for (let r = 0; r < 256; ) {
-      for (let g = 0; g < 256; ) {
-        for (let b = 0; b < 256; ) {
+    for (let r = 0; r < 250; ) {
+      for (let g = 0; g < 250; ) {
+        for (let b = 0; b < 250; ) {
           colourArray.push({ r, g, b });
           b += 8;
         }
@@ -21,12 +21,12 @@ const Image = () => {
     setInitial(false);
   };
 
-  const getRandomSet = () => {
-    let coloursArray = [...colours];
+  const getRandomSet = (coloursArray) => {
     let uniqueArray = [];
     let randomSetArray = [];
-    while (uniqueArray.length < 100) {
-      let rand = Math.floor(Math.random() * 100) + 1;
+
+    while (randomSetArray.length < coloursArray.length / 60) {
+      let rand = Math.floor(Math.random() * coloursArray.length);
       if (uniqueArray.indexOf(rand) === -1) {
         uniqueArray.push(rand);
         randomSetArray.push(coloursArray[rand]);
@@ -36,9 +36,9 @@ const Image = () => {
   };
 
   const getClosestColour = (center, randomSet) => {
-    let min = 763;
+    let min = 1000;
     let minIndex = 0;
-    let coloursArray = [...colours];
+
     randomSet.forEach((element, i) => {
       const diff =
         Math.abs(center.r - element.r) +
@@ -55,9 +55,16 @@ const Image = () => {
   const createImageArray = () => {
     let coloursArray = [...colours];
     let randomSetArray = [];
-    while (coloursArray.length != 0) {
-      randomSetArray = getRandomSet();
+    let imageArray = [];
+    let deleteIndex;
+    let pixel;
+    while (coloursArray.length > 0) {
+      randomSetArray = getRandomSet(coloursArray);
+      deleteIndex = getClosestColour({ r: 255, g: 0, b: 0 }, randomSetArray);
+      pixel = coloursArray.splice(deleteIndex, 1)[0];
+      imageArray.push(pixel);
     }
+    setImage(imageArray);
   };
 
   useEffect(() => {
@@ -65,23 +72,38 @@ const Image = () => {
   }, []);
 
   useEffect(() => {
-    if (!initial) {
-      colours.forEach((element) => {
-        console.log(element.r, element.g, element.b);
-      });
-      getRandomSet();
+    if (colours.length != 0) {
+      createImageArray();
     }
   }, [colours]);
 
+  useEffect(() => {
+    if (image.length != 0) {
+      console.log(image);
+    }
+  }, [Image]);
+
   return (
-    <div>
-      {image.map((element) => (
-        <div>
-          <div>{element.r}</div>
-          <div>{element.g}</div>
-          <div>{element.b}</div>
-        </div>
-      ))}
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "row",
+        height: "100%",
+        overflow: "auto",
+      }}
+    >
+      {image.map((element, i) => {
+        return (
+          <div
+            key={i}
+            style={{
+              backgroundColor: `rgb(${element.r},${element.g},${element.b})`,
+              width: "80px",
+              height: "80px",
+            }}
+          ></div>
+        );
+      })}
       Image
     </div>
   );
