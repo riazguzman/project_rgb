@@ -1,4 +1,6 @@
+// React
 import React from "react";
+
 const Pixel = ({ element }) => {
   return (
     <div

@@ -4,10 +4,21 @@ import React, { useEffect, useState } from "react";
 // Components
 import Pixel from "./Pixel";
 
+// Emotino
+import styled from "@emotion/styled";
+
+// Styling the image container
+const ImageContainer = styled.div`
+  display: grid;
+  grid-template-columns: repeat(256, 3px);
+  width: 768px;
+  margin: auto;
+`;
+
 const Image = () => {
   // colours array contains all posible rgb combinations.
   const [colours, setColours] = useState([]);
-  // image array contains all possible rgb combinations in an order described in algorithm below.
+  // image array contains all possible rgb combinations in an order determined by algorithm below.
   const [image, setImage] = useState([]);
 
   // Creates colours array using nested loops.
@@ -98,18 +109,11 @@ const Image = () => {
   }, [colours]);
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(256,3px)",
-        width: "768px",
-        margin: "auto",
-      }}
-    >
+    <ImageContainer>
       {image.map((element, i) => {
         return <Pixel element={element} />;
       })}
-    </div>
+    </ImageContainer>
   );
 };
 
