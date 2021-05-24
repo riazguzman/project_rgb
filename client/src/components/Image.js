@@ -7,9 +7,9 @@ const Image = () => {
 
   const getColours = () => {
     const colourArray = [];
-    for (let r = 0; r < 250; ) {
-      for (let g = 0; g < 250; ) {
-        for (let b = 0; b < 250; ) {
+    for (let r = 0; r < 256; ) {
+      for (let g = 0; g < 256; ) {
+        for (let b = 0; b < 256; ) {
           colourArray.push({ r, g, b });
           b += 8;
         }
@@ -25,7 +25,7 @@ const Image = () => {
     let uniqueArray = [];
     let randomSetArray = [];
 
-    while (randomSetArray.length < coloursArray.length / 60) {
+    while (randomSetArray.length < coloursArray.length / 200) {
       let rand = Math.floor(Math.random() * coloursArray.length);
       if (uniqueArray.indexOf(rand) === -1) {
         uniqueArray.push(rand);
@@ -60,7 +60,10 @@ const Image = () => {
     let pixel;
     while (coloursArray.length > 0) {
       randomSetArray = getRandomSet(coloursArray);
-      deleteIndex = getClosestColour({ r: 255, g: 0, b: 0 }, randomSetArray);
+      deleteIndex = getClosestColour(
+        { r: 255, g: 255, b: 255 },
+        randomSetArray
+      );
       pixel = coloursArray.splice(deleteIndex, 1)[0];
       imageArray.push(pixel);
     }
@@ -77,19 +80,14 @@ const Image = () => {
     }
   }, [colours]);
 
-  useEffect(() => {
-    if (image.length != 0) {
-      console.log(image);
-    }
-  }, [Image]);
-
   return (
     <div
       style={{
-        display: "flex",
-        flexDirection: "row",
+        width: "80%",
+        display: "grid",
+        gridTemplateColumns: "repeat(256,3px)",
         height: "100%",
-        overflow: "auto",
+        margin: "auto",
       }}
     >
       {image.map((element, i) => {
@@ -98,13 +96,11 @@ const Image = () => {
             key={i}
             style={{
               backgroundColor: `rgb(${element.r},${element.g},${element.b})`,
-              width: "80px",
-              height: "80px",
+              height: "3px",
             }}
           ></div>
         );
       })}
-      Image
     </div>
   );
 };
