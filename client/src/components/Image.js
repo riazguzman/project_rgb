@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 
+import Pixel from "./Pixel";
+
 const Image = () => {
-  const [initial, setInitial] = useState(true);
   const [colours, setColours] = useState([]);
   const [image, setImage] = useState([]);
 
@@ -18,7 +19,6 @@ const Image = () => {
       r += 8;
     }
     setColours(colourArray);
-    setInitial(false);
   };
 
   const getRandomSet = (coloursArray) => {
@@ -60,10 +60,7 @@ const Image = () => {
     let pixel;
     while (coloursArray.length > 0) {
       randomSetArray = getRandomSet(coloursArray);
-      deleteIndex = getClosestColour(
-        { r: 255, g: 255, b: 255 },
-        randomSetArray
-      );
+      deleteIndex = getClosestColour({ r: 255, g: 0, b: 0 }, randomSetArray);
       pixel = coloursArray.splice(deleteIndex, 1)[0];
       imageArray.push(pixel);
     }
@@ -83,23 +80,14 @@ const Image = () => {
   return (
     <div
       style={{
-        width: "80%",
         display: "grid",
         gridTemplateColumns: "repeat(256,3px)",
-        height: "100%",
+        width: "768px",
         margin: "auto",
       }}
     >
       {image.map((element, i) => {
-        return (
-          <div
-            key={i}
-            style={{
-              backgroundColor: `rgb(${element.r},${element.g},${element.b})`,
-              height: "3px",
-            }}
-          ></div>
-        );
+        return <Pixel element={element} />;
       })}
     </div>
   );
